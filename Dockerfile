@@ -1,5 +1,5 @@
 # Use a slim Python base for small image size
-FROM python:3.12.8-slim
+FROM python:3.11-slim
 
 # Set working directory inside container
 WORKDIR /unified_app
@@ -7,6 +7,10 @@ WORKDIR /unified_app
 # Install system dependencies (optional)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    gcc \
+    libffi-dev \
+    libssl-dev \
+    python3-dev \
  && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for caching
