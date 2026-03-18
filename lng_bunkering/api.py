@@ -52,6 +52,7 @@ available_ships: Dict[str, List[str]] = {
     "MOUNT ARARAT": ["LNG_TK1", "LNG_TK2"],
     "ATLANTIC PEARL": ["LNG_TK1", "LNG_TK2"],
     "SEGWAY": ["LNG_TK1", "LNG_TK2"],
+    "PATHWAY": ["LNG_TK1", "LNG_TK2"],
     "CMA CGM ARCTIC": ["LNG_TK"],
     "CMA CGM BALI": ["LNG_TK"],
     "CMA CGM DIGNITY": ["LNG_TK"],
@@ -357,35 +358,39 @@ def compute_corrected_values(
 def get_ship_parameters(ship_id: str) -> Dict[str, Any]:
     if ship_id in ["MOUNT TOURMALINE", "MOUNT NOVATERRA"]:
         return {"BOG_max": 500, "LNG_TK1_cap": 3175.139, "LNG_TK2_cap": 3180.121, "identity": "209k_bulk"}
-    elif ship_id in [
-        "MOUNT ANETO", "MOUNT TAI", "MOUNT OSSA", "MOUNT JADEITE", "MOUNT API",
-        "MOUNT AMELIOR", "MOUNT HENG", "MOUNT GOWER", "MOUNT GAEA",
-        "MOUNT COOK", "MOUNT ARARAT"
-    ]:
+    
+    elif ship_id in ["MOUNT ANETO", "MOUNT TAI", "MOUNT OSSA", "MOUNT JADEITE", "MOUNT API",
+        "MOUNT AMELIOR", "MOUNT HENG", "MOUNT GOWER", "MOUNT GAEA","MOUNT COOK", "MOUNT ARARAT"]:
         return {"BOG_max": 500, "LNG_TK1_cap": 3181.546, "LNG_TK2_cap": 3179.732, "identity": "210k_bulk"}
-    elif ship_id in [
-        "CMA CGM ARCTIC", "CMA CGM BALI", "CMA CGM DIGNITY", "CMA CGM HOPE",
+    
+    elif ship_id in ["CMA CGM ARCTIC", "CMA CGM BALI", "CMA CGM DIGNITY", "CMA CGM HOPE",
         "CMA CGM IGUACU", "CMA CGM INTEGRITY", "CMA CGM LIBERTY", "CMA CGM PRIDE",
-        "CMA CGM TENERE", "CMA CGM SCANDOLA", "CMA CGM SYMI", "CMA CGM UNITY"
-    ]:
+        "CMA CGM TENERE", "CMA CGM SCANDOLA", "CMA CGM SYMI", "CMA CGM UNITY"]:
         return {"BOG_max": 500, "LNG_TK1_cap": 12448.3, "identity": "CMA_cont"}
+    
     elif ship_id in ["ZIM ARIES", "ZIM GEMINI", "ZIM SCORPIO"]:
         return {"BOG_max": 1200, "LNG_TK1_cap": 6125.285, "identity": "ZIM_cont"}
-    elif ship_id in [
-        "CMA CGM DAYTONA", "CMA CGM INDIANAPOLIS", "CMA CGM MONACO", "CMA CGM SILVERSTONE",
-        "CMA CGM MONZA", "LAKE HERMAN", "LAKE ANNECY", "LAKE LUGU", "LAKE QARAOUN",
-        "LAKE SAINT ANNE", "LAKE TRAVIS", "LAKE TAZAWA"]:
+    
+    elif ship_id in ["CMA CGM DAYTONA", "CMA CGM INDIANAPOLIS", "CMA CGM MONACO", "CMA CGM SILVERSTONE",
+        "CMA CGM MONZA", "LAKE HERMAN", "LAKE ANNECY", "LAKE LUGU", "LAKE QARAOUN","LAKE SAINT ANNE",
+        "LAKE TRAVIS", "LAKE TAZAWA"]:
         return {"BOG_max": 600, "LNG_TK1_cap": 2013.699, "LNG_TK2_cap": 2014.748, "identity": "PCTC"}
+    
     elif ship_id in ["ATLANTIC JADE", "ATLANTIC EMERALD"]:
         return {"BOG_max": 1200, "LNG_TK1_cap": 2324.113, "LNG_TK2_cap": 2322.097, "identity": "110k_tanker"}
+    
     elif ship_id in ["ATLANTIC PEARL"]:   #111k Tanker
-            return {"BOG_max": 1200, "LNG_TK1_cap": 1816.435, "LNG_TK2_cap": 1818.006, "identity": "111k_tanker"}    
+        return {"BOG_max": 1200, "LNG_TK1_cap": 1816.435, "LNG_TK2_cap": 1818.006, "identity": "111k_tanker"}
+        
     elif ship_id in ["STARWAY", "GREENWAY"]:
         return {"BOG_max": 1200, "LNG_TK1_cap": 2570.133, "LNG_TK2_cap": 2571.517, "identity": "150k_tanker"}
+    
     elif ship_id in ["QUETZAL", "COPAN", "TISCAPA", "TOROGOZ"]:   #1400TEU_cont        
         return {"BOG_max": 500, "LNG_TK1_cap": 1613, "identity": "1400TEU_cont"}
+    
     elif ship_id in ["SEGWAY", "PATHWAY"]:   #155k tanker      
         return {"BOG_max": 1200, "LNG_TK1_cap": 2556.93, "LNG_TK2_cap": 2557.299, "identity": "155k_tanker"}
+    
     else:
         raise HTTPException(status_code=400, detail=f"Unknown ship ID: {ship_id}")
 
