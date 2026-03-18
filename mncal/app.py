@@ -40,6 +40,7 @@ available_ships = {
     "MOUNT COOK": ["LNG_TK1", "LNG_TK2"],
     "MOUNT ARARAT": ["LNG_TK1", "LNG_TK2"],  
     "ATLANTIC PEARL": ["LNG_TK1", "LNG_TK2"],
+    "SEGWAY": ["LNG_TK1", "LNG_TK2"],
     "CMA CGM ARCTIC" : ["LNG_TK"],
     "CMA CGM BALI" : ["LNG_TK"],
     "CMA CGM DIGNITY" : ["LNG_TK"],
@@ -411,20 +412,25 @@ def compute_corrected_values(ship_id, tank_id, level, list_, trim_, temp_, press
 
         # Create interpolators
         level_list_interpolator = RegularGridInterpolator(
-            (level_values, list_values), level_list_df.iloc[:, 1:].values, method="linear"
+            (level_values, list_values), level_list_df.iloc[:, 1:].values, method="linear",
+            bounds_error=False, fill_value=None
         )
         level_trim_interpolator = RegularGridInterpolator(
-            (level_values, trim_values), level_trim_df.iloc[:, 1:].values, method="linear"
+            (level_values, trim_values), level_trim_df.iloc[:, 1:].values, method="linear",
+            bounds_error=False, fill_value=None
         )
         level_temp_interpolator = RegularGridInterpolator(
-            (level_values, temp_values), level_temp_df.iloc[:, 1:].values, method="linear"
+            (level_values, temp_values), level_temp_df.iloc[:, 1:].values, method="linear",
+            bounds_error=False, fill_value=None
         )
         level_press_interpolator = RegularGridInterpolator(
-            (level_values, press_values), level_press_df.iloc[:, 1:].values, method="linear"
+            (level_values, press_values), level_press_df.iloc[:, 1:].values, method="linear",
+            bounds_error=False, fill_value=None
         )
 
         level_volume_interpolator = RegularGridInterpolator(
-            (level_values,), volume_values, method="linear"
+            (level_values,), volume_values, method="linear",
+            bounds_error=False, fill_value=None
         ) 
 
         # Interpolate values
@@ -495,7 +501,12 @@ def calculate_columnwise(df, ship_id, tank_ids):
         BOG_max = 1200
         LNG_TK1_cap = 2570.133
         LNG_TK2_cap = 2571.517
-        identity = "150k_tanker"              
+        identity = "150k_tanker"       
+    elif ship_id in ["SEGWAY"]:   #155K_tanker
+        BOG_max = 1200    # to be ascertained
+        LNG_TK1_cap = 2556.93
+        LNG_TK2_cap = 2557.299
+        identity = "155k_tanker"            
     elif ship_id in ["QUETZAL", "COPAN", "TISCAPA", "TOROGOZ"]:   #1400TEU_cont
         BOG_max = 500
         LNG_TK1_cap = 1613
@@ -672,7 +683,7 @@ def calculate_columnwise(df, ship_id, tank_ids):
 
         # Special handling for N2
         prev_N2m = df.at[i-1, 'N2m']
-        N2_consumed = (df.at[i, 'GE_cons'] + df.at[i, 'BLR_cons']) * (prev_N2m / df.at[i-1, 'ROB_cal'])
+        N2_consumed = (df.at[i, 'GE_cons'] + df.at[i, 'BLR_cons']) * 1500
         N2_supplied = df.at[i, 'BDN'] * df.at[i, 'N2s']
         df.at[i, 'N2m'] = max(prev_N2m - N2_consumed + N2_supplied, 0)
 

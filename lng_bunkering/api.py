@@ -51,6 +51,7 @@ available_ships: Dict[str, List[str]] = {
     "MOUNT COOK": ["LNG_TK1", "LNG_TK2"],
     "MOUNT ARARAT": ["LNG_TK1", "LNG_TK2"],
     "ATLANTIC PEARL": ["LNG_TK1", "LNG_TK2"],
+    "SEGWAY": ["LNG_TK1", "LNG_TK2"],
     "CMA CGM ARCTIC": ["LNG_TK"],
     "CMA CGM BALI": ["LNG_TK"],
     "CMA CGM DIGNITY": ["LNG_TK"],
@@ -318,19 +319,24 @@ def compute_corrected_values(
             press_values = np.array([float(c.replace("press_", "")) for c in level_press_df.columns[1:]])
 
             level_list_interpolator = RegularGridInterpolator(
-                (level_values, list_values), level_list_df.iloc[:, 1:].values, method="linear"
+                (level_values, list_values), level_list_df.iloc[:, 1:].values, method="linear",
+                bounds_error=False, fill_value=None
             )
             level_trim_interpolator = RegularGridInterpolator(
-                (level_values, trim_values), level_trim_df.iloc[:, 1:].values, method="linear"
+                (level_values, trim_values), level_trim_df.iloc[:, 1:].values, method="linear",
+                bounds_error=False, fill_value=None
             )
             level_temp_interpolator = RegularGridInterpolator(
-                (level_values, temp_values), level_temp_df.iloc[:, 1:].values, method="linear"
+                (level_values, temp_values), level_temp_df.iloc[:, 1:].values, method="linear",
+                bounds_error=False, fill_value=None
             )
             level_press_interpolator = RegularGridInterpolator(
-                (level_values, press_values), level_press_df.iloc[:, 1:].values, method="linear"
+                (level_values, press_values), level_press_df.iloc[:, 1:].values, method="linear",
+                bounds_error=False, fill_value=None
             )
             level_volume_interpolator = RegularGridInterpolator(
-                (level_values,), volume_values, method="linear"
+                (level_values,), volume_values, method="linear",
+                bounds_error=False, fill_value=None
             )
 
             list_correction = float(level_list_interpolator([[level, list_]])[0])
@@ -368,17 +374,18 @@ def get_ship_parameters(ship_id: str) -> Dict[str, Any]:
     elif ship_id in [
         "CMA CGM DAYTONA", "CMA CGM INDIANAPOLIS", "CMA CGM MONACO", "CMA CGM SILVERSTONE",
         "CMA CGM MONZA", "LAKE HERMAN", "LAKE ANNECY", "LAKE LUGU", "LAKE QARAOUN",
-        "LAKE SAINT ANNE", "LAKE TRAVIS", "LAKE TAZAWA"
-    ]:
+        "LAKE SAINT ANNE", "LAKE TRAVIS", "LAKE TAZAWA"]:
         return {"BOG_max": 600, "LNG_TK1_cap": 2013.699, "LNG_TK2_cap": 2014.748, "identity": "PCTC"}
     elif ship_id in ["ATLANTIC JADE", "ATLANTIC EMERALD"]:
         return {"BOG_max": 1200, "LNG_TK1_cap": 2324.113, "LNG_TK2_cap": 2322.097, "identity": "110k_tanker"}
-    elif ship_id in ["ATLANTIC PEARL"]:   
+    elif ship_id in ["ATLANTIC PEARL"]:   #111k Tanker
             return {"BOG_max": 1200, "LNG_TK1_cap": 1816.435, "LNG_TK2_cap": 1818.006, "identity": "111k_tanker"}    
     elif ship_id in ["STARWAY", "GREENWAY"]:
         return {"BOG_max": 1200, "LNG_TK1_cap": 2570.133, "LNG_TK2_cap": 2571.517, "identity": "150k_tanker"}
-    elif ship_id in ["QUETZAL", "COPAN", "TISCAPA", "TOROGOZ"]:   #1400TEU_cont
+    elif ship_id in ["QUETZAL", "COPAN", "TISCAPA", "TOROGOZ"]:   #1400TEU_cont        
         return {"BOG_max": 500, "LNG_TK1_cap": 1613, "identity": "1400TEU_cont"}
+    elif ship_id in ["SEGWAY", "PATHWAY"]:   #155k tanker      
+        return {"BOG_max": 1200, "LNG_TK1_cap": 2556.93, "LNG_TK2_cap": 2557.299, "identity": "155k_tanker"}
     else:
         raise HTTPException(status_code=400, detail=f"Unknown ship ID: {ship_id}")
 
